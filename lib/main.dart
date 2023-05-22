@@ -1,7 +1,11 @@
+import 'package:app/home/detail.dart';
 import 'package:app/home/index.dart';
+import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  StorageService();
   runApp(const MyApp());
 }
 
@@ -16,6 +20,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
+      initialRoute: "/",
+      routes: {
+        HomeDetailPage.routeName: (context) => const HomeDetailPage(),
+      },
     );
   }
 }
