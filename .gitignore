@@ -42,3 +42,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# We need to exclude the sdk path, as we would upload it to git, which isn't our intention
+/.fvm/flutter_sdk/
