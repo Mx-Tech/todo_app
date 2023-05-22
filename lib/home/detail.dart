@@ -1,4 +1,5 @@
 import 'package:app/models/todo_item.dart';
+import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
 
 class HomeDetailPage extends StatefulWidget {
@@ -21,7 +22,9 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    TodoItem item = ModalRoute.of(context)!.settings.arguments as TodoItem;
+    List<TodoItem> todoList = (ModalRoute.of(context)!.settings.arguments as Map)["todoList"] as List<TodoItem>;
+    int index = (ModalRoute.of(context)!.settings.arguments as Map)["index"] as int;
+    TodoItem item = todoList[index];
     commentController.text = item.comment;
     return WillPopScope(
       onWillPop: (){
@@ -39,11 +42,12 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
             children: [
               CheckboxListTile(
                 value: item.checked,
-                title: Text("Status"),
+                title: const Text("Status"),
                 onChanged: (value) {
                   setState(
                     () {
                       item.checked = value ?? false;
+                      StorageService().storeTodoItems(todoList);
                     },
                   );
                 },
@@ -53,6 +57,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
                 controller: commentController,
                 onChanged: (value) {
                   item.comment = value;
+                  StorageService().storeTodoItems(todoList);
                 },
               ),
             ],

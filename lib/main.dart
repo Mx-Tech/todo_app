@@ -3,9 +3,10 @@ import 'package:app/home/index.dart';
 import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  StorageService();
+  /// Runs the app, when the shared preferences instance was loaded correctly!
+  await StorageService().initialize();
   runApp(const MyApp());
 }
 

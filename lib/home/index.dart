@@ -17,7 +17,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    todoList = [];
+
+    /// Here we load the items from the storage
+    todoList = StorageService().getTodoItems();
     todoTitleController = TextEditingController();
   }
 
@@ -36,23 +38,30 @@ class _HomePageState extends State<HomePage> {
               /// Now we want to make the navigation to the detail page much
               /// easier, by providing a gesture detector to detect taps, so we
               /// can navigate to the detail page with a long tap.
-              Navigator.of(context)
-                  .pushNamed(HomeDetailPage.routeName,
-                      arguments: todoList[index])
-                  .then((item) {
+              Navigator.of(context).pushNamed(HomeDetailPage.routeName,
+                  arguments: {
+                    "todoList": todoList,
+                    "index": index
+                  }).then((item) {
                 /// This is the return point after popping the detail page!
                 if (item != null && item is TodoItem) {
                   setState(() {
                     todoList.replaceRange(index, index + 1, [item]);
+
+                    /// This store items function will save our item on popping
+                    /// the detail route. But we want to achieve saving the item
+                    /// on change.
+                    StorageService().storeTodoItems(todoList);
                   });
                 }
               });
             },
             child: Dismissible(
-              key: ValueKey<int>(index),
+              key: ValueKey<int>(index.hashCode ^ todoList[index].hashCode),
               onDismissed: (_) {
                 setState(() {
                   todoList.removeAt(index);
+                  StorageService().storeTodoItems(todoList);
                 });
               },
               child: CheckboxListTile(
@@ -66,7 +75,6 @@ class _HomePageState extends State<HomePage> {
                 onChanged: (bool? value) {
                   setState(() {
                     todoList[index].checked = value ?? false;
-                    // now we can store our data!
                     StorageService().storeTodoItems(todoList);
                   });
                 },
@@ -91,18 +99,28 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextField(
+                      TextFormField(
                         focusNode: todoTitleControllerNode,
                         controller: todoTitleController,
                         decoration:
                             const InputDecoration(hintText: "Enter your ToDo!"),
+                        validator: (value){
+                          /// As we want to prevent our app from displaying emtpy
+                          /// items we need some validation!
+                          if (value == null || value.isEmpty){
+                            return "Please add some information!";
+                          }
+                          /// If the validator functions returns [null] everything is fine.
+                          return null;
+                        },
                       ),
                       const Divider(),
                       Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context).pop(todoTitleController.text);
+                            Navigator.of(context)
+                                .pop(todoTitleController.text);
                           },
                           icon: const Icon(Icons.check),
                         ),
@@ -116,6 +134,7 @@ class _HomePageState extends State<HomePage> {
             if (value != null) {
               setState(() {
                 todoList.add(TodoItem(value, false));
+                StorageService().storeTodoItems(todoList);
                 todoTitleController.clear();
               });
             }
