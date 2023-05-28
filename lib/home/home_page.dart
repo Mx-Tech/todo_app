@@ -1,4 +1,4 @@
-import 'package:app/home/detail.dart';
+import 'package:app/home/detail.dart' as home_page;
 import 'package:app/models/todo_item.dart';
 import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
               /// Now we want to make the navigation to the detail page much
               /// easier, by providing a gesture detector to detect taps, so we
               /// can navigate to the detail page with a long tap.
-              Navigator.of(context).pushNamed(HomeDetailPage.routeName,
+              Navigator.of(context).pushNamed(home_page.HomeDetailPage.routeName,
                   arguments: {
                     "todoList": todoList,
                     "index": index
