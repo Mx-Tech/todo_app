@@ -11,8 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<TodoItem> todoList;
-  late TextEditingController todoTitleController;
+  late final List<TodoItem> todoList;
+  late final TextEditingController todoTitleController;
 
   @override
   void initState() {
@@ -38,11 +38,11 @@ class _HomePageState extends State<HomePage> {
               /// Now we want to make the navigation to the detail page much
               /// easier, by providing a gesture detector to detect taps, so we
               /// can navigate to the detail page with a long tap.
-              Navigator.of(context).pushNamed(home_page.HomeDetailPage.routeName,
-                  arguments: {
-                    "todoList": todoList,
-                    "index": index
-                  }).then((item) {
+              Navigator.of(context)
+                  .pushNamed(home_page.HomeDetailPage.routeName, arguments: {
+                "todoList": todoList,
+                "index": index
+              }).then((item) {
                 /// This is the return point after popping the detail page!
                 if (item != null && item is TodoItem) {
                   setState(() {
@@ -104,12 +104,13 @@ class _HomePageState extends State<HomePage> {
                         controller: todoTitleController,
                         decoration:
                             const InputDecoration(hintText: "Enter your ToDo!"),
-                        validator: (value){
+                        validator: (value) {
                           /// As we want to prevent our app from displaying emtpy
                           /// items we need some validation!
-                          if (value == null || value.isEmpty){
+                          if (value == null || value.isEmpty) {
                             return "Please add some information!";
                           }
+
                           /// If the validator functions returns [null] everything is fine.
                           return null;
                         },
@@ -119,8 +120,7 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.topRight,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pop(todoTitleController.text);
+                            Navigator.of(context).pop(todoTitleController.text);
                           },
                           icon: const Icon(Icons.check),
                         ),
@@ -143,5 +143,26 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class UnperformantList extends StatelessWidget {
+  const UnperformantList({Key? key}) : super(key: key);
+
+  List<String> items = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("ToDo It!"),
+        ),
+        body: ListView(
+          children: items
+              .map(
+                (e) => Text(e),
+              )
+              .toList(),
+        ));
   }
 }
