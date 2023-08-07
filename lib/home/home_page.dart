@@ -1,4 +1,4 @@
-import 'package:app/home/detail.dart' as home_page;
+import 'package:app/home/detail.dart';
 import 'package:app/models/todo_item.dart';
 import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
@@ -34,28 +34,52 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: todoList.length,
         itemBuilder: (context, index) {
-          return Dismissible(
-            key: ValueKey<int>(index.hashCode ^ todoList[index].hashCode),
-            onDismissed: (_) {
-              setState(() {
-                todoList.removeAt(index);
-                StorageService().storeTodoItems(todoList);
+          return GestureDetector(
+            onLongPress: () {
+              /// Now we want to make the navigation to the detail page much
+              /// easier, by providing a gesture detector to detect taps, so we
+              /// can navigate to the detail page with a long tap.
+              Navigator.of(context).pushNamed(HomeDetailPage.routeName,
+                  arguments: {
+                    "todoList": todoList,
+                    "index": index
+                  }).then((item) {
+                /// This is the return point after popping the detail page!
+                if (item != null && item is TodoItem) {
+                  setState(() {
+                    todoList.replaceRange(index, index + 1, [item]);
+
+                    /// This store items function will save our item on popping
+                    /// the detail route. But we want to achieve saving the item
+                    /// on change.
+                    StorageService().storeTodoItems(todoList);
+                  });
+                }
               });
             },
-            child: CheckboxListTile(
-              title: Text(
-                todoList[index].title,
-                style: todoList[index].checked
-                    ? const TextStyle(decoration: TextDecoration.lineThrough)
-                    : null,
-              ),
-              value: todoList[index].checked,
-              onChanged: (bool? value) {
+            child: Dismissible(
+              key: ValueKey<int>(index.hashCode ^ todoList[index].hashCode),
+              onDismissed: (_) {
                 setState(() {
-                  todoList[index].checked = value ?? false;
+                  todoList.removeAt(index);
                   StorageService().storeTodoItems(todoList);
                 });
               },
+              child: CheckboxListTile(
+                title: Text(
+                  todoList[index].title,
+                  style: todoList[index].checked
+                      ? const TextStyle(decoration: TextDecoration.lineThrough)
+                      : null,
+                ),
+                value: todoList[index].checked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    todoList[index].checked = value ?? false;
+                    StorageService().storeTodoItems(todoList);
+                  });
+                },
+              ),
             ),
           );
         },
