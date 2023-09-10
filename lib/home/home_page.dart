@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("ToDo It!"),
       ),
@@ -62,21 +63,17 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
             context: context,
             builder: (context) {
-              /// Those two lines simply request the focus for the instantiated
-              /// focus node. This is necessary to automatically pre-select the TextField
-              /// where the focus node [todoTitleControllerNode] is used.
-              FocusNode todoTitleControllerNode = FocusNode();
-              todoTitleControllerNode.requestFocus();
               return SafeArea(
+                maintainBottomViewPadding: true,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: MediaQuery.of(context).viewInsets.copyWith(left: 8, right: 8),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        focusNode: todoTitleControllerNode,
                         controller: todoTitleController,
                         decoration:
                             const InputDecoration(hintText: "Enter your ToDo!"),
