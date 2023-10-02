@@ -32,11 +32,11 @@ class HomePageService {
     return StorageService().storeTodoItems(todoList);
   }
 
-  void navigateToDetailPage(BuildContext context, {required int index}) {
+  Future<TodoItem?> navigateToDetailPage(BuildContext context, {required int index}) {
     /// Now we want to make the navigation to the detail page much
     /// easier, by providing a gesture detector to detect taps. Here we use
     /// [onLongPress] to navigate to the detail page.
-    Navigator.of(context).pushNamed(HomeDetailPage.routeName,
+    return Navigator.of(context).pushNamed(HomeDetailPage.routeName,
         arguments: {"todoList": todoList, "index": index}).then((item) {
       /// This is the return point after popping the detail page!
       if (item != null && item is TodoItem) {
@@ -47,6 +47,7 @@ class HomePageService {
         /// the detail route. But we want to achieve saving the item
         /// on change.
         StorageService().storeTodoItems(todoList);
+        return item;
       }
     });
   }

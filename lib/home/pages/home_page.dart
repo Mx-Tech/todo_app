@@ -32,7 +32,10 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: HomePageFloatingActionButton(
         widget.service,
-        update: (String label) {
+        update: (String? label) {
+          if (label == null) {
+            return;
+          }
           setState(() {
             widget.service.todoList.add(TodoItem(label, false));
             StorageService().storeTodoItems(widget.service.todoList);

@@ -28,19 +28,22 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () =>
-          widget.service.navigateToDetailPage(context, index: widget.index),
+      onLongPress: () => widget.service
+          .navigateToDetailPage(context, index: widget.index)
+          .then((value) {
+           stateChange.value = value?.checked ?? false;
+          }),
       child: Dismissible(
-        key: ValueKey<int>(widget.index.hashCode ^
-            widget.service.todoList[widget.index].hashCode),
-        onDismissed: (_) {
-          widget.service.removeAt(widget.index);
-        },
+        key: ValueKey<int>(_itemHashCode),
+        onDismissed: (_) => widget.service.removeAt(widget.index),
         background: _background(),
         child: _item(),
       ),
     );
   }
+
+  int get _itemHashCode =>
+      widget.index.hashCode ^ widget.service.todoList[widget.index].hashCode;
 
   Container _background() {
     return Container(
