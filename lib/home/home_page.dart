@@ -1,3 +1,4 @@
+import 'package:boringDos/home/detail.dart';
 import 'package:boringDos/models/todo_item.dart';
 import 'package:boringDos/services/storage.dart';
 import 'package:flutter/material.dart';
