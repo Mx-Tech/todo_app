@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TodoItem {
   String title;
   bool checked;
@@ -18,5 +20,13 @@ class TodoItem {
       "checked": checked,
       "comment": comment,
     };
+  }
+
+  TodoItem copyWith({String? title, bool? checked, String? comment}) {
+    return TodoItem(
+      title ?? this.title,
+      checked ?? this.checked,
+      comment: comment ?? this.comment,
+    );
   }
 }

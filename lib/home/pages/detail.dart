@@ -1,5 +1,5 @@
-import 'package:boringDos/models/todo_item.dart';
-import 'package:boringDos/services/storage.dart';
+import 'package:boringDos/home/services/home_detail_service.dart';
+import 'package:boringDos/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class HomeDetailPage extends StatefulWidget {
@@ -12,58 +12,61 @@ class HomeDetailPage extends StatefulWidget {
 }
 
 class _HomeDetailPageState extends State<HomeDetailPage> {
-  late final TextEditingController commentController;
+  late final HomeDetailService service;
 
   @override
   void initState() {
     super.initState();
-    commentController = TextEditingController();
+    service = HomeDetailService();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<TodoItem> todoList = (ModalRoute.of(context)!.settings.arguments as Map)["todoList"] as List<TodoItem>;
-    int index = (ModalRoute.of(context)!.settings.arguments as Map)["index"] as int;
-    TodoItem item = todoList[index];
-    commentController.text = item.comment;
+    service.init(context);
+
     return WillPopScope(
-      onWillPop: (){
-        Navigator.of(context).pop(item);
+      onWillPop: () {
+        Navigator.of(context).pop(service.item);
         return Future.value(true);
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(item.title),
+          title: Text(service.item.title),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: Paddings.all(2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CheckboxListTile(
-                value: item.checked,
-                title: const Text("Status"),
-                onChanged: (value) {
-                  setState(
-                    () {
-                      item.checked = value ?? false;
-                      StorageService().storeTodoItems(todoList);
-                    },
-                  );
-                },
-              ),
-              const Text("Comment:"),
-              TextField(
-                controller: commentController,
-                onChanged: (value) {
-                  item.comment = value;
-                  StorageService().storeTodoItems(todoList);
-                },
-              ),
+              _checkBox(),
+              ..._comment(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _checkBox() {
+    return CheckboxListTile(
+      value: service.item.checked,
+      title: const Text("Status"),
+      onChanged: (value) {
+        setState(() {
+          service.item = service.item.copyWith(checked: value ?? false);
+        });
+      },
+    );
+  }
+
+  List<Widget> _comment() {
+    return [
+      const Text("Comment:"),
+      TextField(
+        controller: service.commentController,
+        onChanged: (value) =>
+            service.item = service.item.copyWith(comment: value),
+      ),
+    ];
   }
 }
