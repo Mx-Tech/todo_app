@@ -1,5 +1,6 @@
-import 'package:boringDos/home/detail.dart';
-import 'package:boringDos/home/home_page.dart';
+import 'package:boringDos/home/pages/detail.dart';
+import 'package:boringDos/home/pages/home_page.dart';
+import 'package:boringDos/home/services/home_page_service.dart';
 import 'package:boringDos/services/storage.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: HomePage(HomePageService()),
       initialRoute: "/",
       routes: {
         HomeDetailPage.routeName: (context) => const HomeDetailPage(),

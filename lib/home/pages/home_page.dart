@@ -1,27 +1,19 @@
-import 'package:boringDos/home/detail.dart';
+import 'package:boringDos/home/pages/detail.dart';
+import 'package:boringDos/home/services/home_page_service.dart';
 import 'package:boringDos/models/todo_item.dart';
 import 'package:boringDos/services/storage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final HomePageService service;
+
+  const HomePage(this.service, {Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late final List<TodoItem> todoList;
-  late final TextEditingController todoTitleController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    /// Here we load the items from the storage
-    todoList = StorageService().getTodoItems();
-    todoTitleController = TextEditingController();
-  }
 
   /// The [Dismissible] widget is used to delete an item through swiping.
   @override
@@ -32,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("ToDo It!"),
       ),
       body: ListView.builder(
-        itemCount: todoList.length,
+        itemCount: widget.service.todoList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onLongPress: () {
@@ -41,42 +33,44 @@ class _HomePageState extends State<HomePage> {
               /// [onLongPress] to navigate to the detail page.
               Navigator.of(context).pushNamed(HomeDetailPage.routeName,
                   arguments: {
-                    "todoList": todoList,
+                    "todoList": widget.service.todoList,
                     "index": index
                   }).then((item) {
                 /// This is the return point after popping the detail page!
                 if (item != null && item is TodoItem) {
                   setState(() {
-                    todoList.replaceRange(index, index + 1, [item]);
+                    widget.service.todoList
+                        .replaceRange(index, index + 1, [item]);
 
                     /// This store items function will save our item on popping
                     /// the detail route. But we want to achieve saving the item
                     /// on change.
-                    StorageService().storeTodoItems(todoList);
+                    StorageService().storeTodoItems(widget.service.todoList);
                   });
                 }
               });
             },
             child: Dismissible(
-              key: ValueKey<int>(index.hashCode ^ todoList[index].hashCode),
+              key: ValueKey<int>(
+                  index.hashCode ^ widget.service.todoList[index].hashCode),
               onDismissed: (_) {
                 setState(() {
-                  todoList.removeAt(index);
-                  StorageService().storeTodoItems(todoList);
+                  widget.service.todoList.removeAt(index);
+                  StorageService().storeTodoItems(widget.service.todoList);
                 });
               },
               child: CheckboxListTile(
                 title: Text(
-                  todoList[index].title,
-                  style: todoList[index].checked
+                  widget.service.todoList[index].title,
+                  style: widget.service.todoList[index].checked
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
-                value: todoList[index].checked,
+                value: widget.service.todoList[index].checked,
                 onChanged: (bool? value) {
                   setState(() {
-                    todoList[index].checked = value ?? false;
-                    StorageService().storeTodoItems(todoList);
+                    widget.service.todoList[index].checked = value ?? false;
+                    StorageService().storeTodoItems(widget.service.todoList);
                   });
                 },
               ),
@@ -93,12 +87,14 @@ class _HomePageState extends State<HomePage> {
               return SafeArea(
                 maintainBottomViewPadding: true,
                 child: Padding(
-                  padding: MediaQuery.of(context).viewInsets.copyWith(left: 8, right: 8),
+                  padding: MediaQuery.of(context)
+                      .viewInsets
+                      .copyWith(left: 8, right: 8),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        controller: todoTitleController,
+                        controller: widget.service.todoTitleController,
                         decoration:
                             const InputDecoration(hintText: "Enter your ToDo!"),
                         validator: (value) {
@@ -117,7 +113,8 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.topRight,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context).pop(todoTitleController.text);
+                            Navigator.of(context)
+                                .pop(widget.service.todoTitleController.text);
                           },
                           icon: const Icon(Icons.check),
                         ),
@@ -130,9 +127,9 @@ class _HomePageState extends State<HomePage> {
           ).then((value) {
             if (value != null) {
               setState(() {
-                todoList.add(TodoItem(value, false));
-                StorageService().storeTodoItems(todoList);
-                todoTitleController.clear();
+                widget.service.todoList.add(TodoItem(value, false));
+                StorageService().storeTodoItems(widget.service.todoList);
+                widget.service.todoTitleController.clear();
               });
             }
           });
