@@ -1,5 +1,6 @@
 import 'package:boringDos/home/pages/detail.dart';
 import 'package:boringDos/home/services/home_page_service.dart';
+import 'package:boringDos/home/widgets/home_fab.dart';
 import 'package:boringDos/home/widgets/item.dart';
 import 'package:boringDos/models/todo_item.dart';
 import 'package:boringDos/services/storage.dart';
@@ -29,63 +30,15 @@ class _HomePageState extends State<HomePage> {
           return TodoItemWidget(widget.service, index: index);
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (context) {
-              return SafeArea(
-                maintainBottomViewPadding: true,
-                child: Padding(
-                  padding: MediaQuery.of(context)
-                      .viewInsets
-                      .copyWith(left: 8, right: 8),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        controller: widget.service.todoTitleController,
-                        decoration:
-                            const InputDecoration(hintText: "Enter your ToDo!"),
-                        validator: (value) {
-                          /// As we want to prevent our app from displaying emtpy
-                          /// items we need some validation!
-                          if (value == null || value.isEmpty) {
-                            return "Please add some information!";
-                          }
-
-                          /// If the validator functions returns [null] everything is fine.
-                          return null;
-                        },
-                      ),
-                      const Divider(),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(widget.service.todoTitleController.text);
-                          },
-                          icon: const Icon(Icons.check),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ).then((value) {
-            if (value != null) {
-              setState(() {
-                widget.service.todoList.add(TodoItem(value, false));
-                StorageService().storeTodoItems(widget.service.todoList);
-                widget.service.todoTitleController.clear();
-              });
-            }
+      floatingActionButton: HomePageFloatingActionButton(
+        widget.service,
+        update: (String label) {
+          setState(() {
+            widget.service.todoList.add(TodoItem(label, false));
+            StorageService().storeTodoItems(widget.service.todoList);
+            widget.service.todoTitleController.clear();
           });
         },
-        child: const Icon(Icons.add),
       ),
     );
   }
