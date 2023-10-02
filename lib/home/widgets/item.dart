@@ -2,6 +2,7 @@ import 'package:boringDos/home/pages/detail.dart';
 import 'package:boringDos/home/services/home_page_service.dart';
 import 'package:boringDos/models/todo_item.dart';
 import 'package:boringDos/services/storage.dart';
+import 'package:boringDos/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class TodoItemWidget extends StatefulWidget {
@@ -59,6 +60,27 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
           widget.service.todoList.removeAt(widget.index);
           StorageService().storeTodoItems(widget.service.todoList);
         },
+        background: Container(
+          color: Colors.red,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+              const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ]
+                .map((child) => Padding(
+                      padding: EdgeInsets.all(Paddings.doubled),
+                      child: child,
+                    ))
+                .toList(),
+          ),
+        ),
         child: ValueListenableBuilder(
           valueListenable: stateChange,
           builder: (BuildContext context, bool value, Widget? child) {
