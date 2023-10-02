@@ -1,5 +1,4 @@
 import 'package:boringDos/home/services/home_page_service.dart';
-import 'package:boringDos/services/storage.dart';
 import 'package:boringDos/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -35,9 +34,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
         key: ValueKey<int>(widget.index.hashCode ^
             widget.service.todoList[widget.index].hashCode),
         onDismissed: (_) {
-          // TODO: call provider later and rebuild list if list items change
-          widget.service.todoList.removeAt(widget.index);
-          StorageService().storeTodoItems(widget.service.todoList);
+          widget.service.removeAt(widget.index);
         },
         background: _background(),
         child: _item(),
@@ -82,9 +79,8 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
           ),
           value: stateChange.value,
           onChanged: (bool? value) {
-            widget.service.todoList[widget.index].checked = value ?? false;
             stateChange.value = value ?? false;
-            StorageService().storeTodoItems(widget.service.todoList);
+            widget.service.update(widget.index, value: value);
           },
         );
       },
