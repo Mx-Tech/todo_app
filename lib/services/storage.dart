@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app/models/todo_item.dart';
+import 'package:boringDos/models/todo_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {

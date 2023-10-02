@@ -1,5 +1,5 @@
-import 'package:app/models/todo_item.dart';
-import 'package:app/services/storage.dart';
+import 'package:boringDos/models/todo_item.dart';
+import 'package:boringDos/services/storage.dart';
 import 'package:flutter/material.dart';
 
 class HomeDetailPage extends StatefulWidget {
