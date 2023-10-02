@@ -31,8 +31,8 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
       onLongPress: () => widget.service
           .navigateToDetailPage(context, index: widget.index)
           .then((value) {
-           stateChange.value = value?.checked ?? false;
-          }),
+        stateChange.value = value?.checked ?? false;
+      }),
       child: Dismissible(
         key: ValueKey<int>(_itemHashCode),
         onDismissed: (_) => widget.service.removeAt(widget.index),

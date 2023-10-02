@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   /// Runs the app, when the shared preferences instance was loaded correctly!
   await StorageService().initialize();
   runApp(const MyApp());
