@@ -25,22 +25,22 @@ class HomeDetailService {
     _isInitialized = true;
   }
 
-  void checkInitialization(){
-    assert(_isInitialized, "Service was not initialized! Call the init function before referencing any object in here!");
+  void _checkInitialization(){
+    assert(_isInitialized, "Service was not initialized! Call the init function before referencing any variable in here!");
   }
 
   TextEditingController get commentController {
-    checkInitialization();
+    _checkInitialization();
     return _commentController;
   }
 
   List<TodoItem> get todoList {
-    checkInitialization();
+    _checkInitialization();
     return _todoList;
   }
 
   TodoItem get item{
-    checkInitialization();
+    _checkInitialization();
     return _todoList[_index];
   }
 
