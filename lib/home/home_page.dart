@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
           return GestureDetector(
             onLongPress: () {
               /// Now we want to make the navigation to the detail page much
-              /// easier, by providing a gesture detector to detect taps, so we
-              /// can navigate to the detail page with a long tap.
+              /// easier, by providing a gesture detector to detect taps. Here we use
+              /// [onLongPress] to navigate to the detail page.
               Navigator.of(context).pushNamed(HomeDetailPage.routeName,
                   arguments: {
                     "todoList": todoList,
