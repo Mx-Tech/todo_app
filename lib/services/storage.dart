@@ -11,9 +11,9 @@ class StorageService {
   /// We instantiate the shared preferences here. As we should not use an await
   /// statement inside a constructor, whe use the future returned by [SharedPreferences.getInstance}
   /// and assign the returned value to the variable [_sharedPreferences].
-  /// To make correkt use of the service, we should instantiate it while starting the app.
+  /// To make correct use of the service, we should instantiate it while starting the app.
   /// To avoid waiting for the future for multiple times, we use a facotry constructor
-  /// in our [StorageService] so the instance of [SharedPreferences] is kept allive
+  /// in our [StorageService] so the instance of [SharedPreferences] is kept alive
   /// as long as the app is running.
   /// By using the underscore, we can make the factory constructor privat,
   StorageService._internal();
