@@ -1,6 +1,6 @@
 # app
 
-Another ToDo App
+Another Boring toDo App
 
 ## Getting Started
 
