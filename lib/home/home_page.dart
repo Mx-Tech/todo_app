@@ -1,4 +1,3 @@
-import 'package:app/home/detail.dart' as home_page;
 import 'package:app/models/todo_item.dart';
 import 'package:app/services/storage.dart';
 import 'package:flutter/material.dart';
