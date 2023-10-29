@@ -1,4 +1,3 @@
-import 'package:boringDos/home/pages/detail.dart';
 import 'package:boringDos/home/services/home_page_service.dart';
 import 'package:boringDos/home/widgets/home_fab.dart';
 import 'package:boringDos/home/widgets/item.dart';
